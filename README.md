@@ -1,59 +1,30 @@
-# Proyecto
+📋 Aplicación Web de Facturación y Control de Stock
+Este repositorio contiene una aplicación desarrollada en Angular, diseñada para facilitar la administración de productos y la emisión de facturas en pesos argentinos (ARS) o dólares estadounidenses (USD). La conversión se realiza automáticamente en base a la cotización oficial obtenida desde la API del BCRA.
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.3.
+🧰 Stack Tecnológico
+Angular (Framework principal)
 
-## Development server
+TypeScript
 
-To start a local development server, run:
+HTML & CSS
 
-```bash
-ng serve
-```
+LocalStorage para almacenamiento persistente en el navegador
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+API externa del BCRA para tipo de cambio
 
-## Code scaffolding
+✨ Características destacadas
+Registro y acceso de usuarios sin autenticación externa (usando almacenamiento local)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Gestión completa de productos: alta, edición y eliminación
 
-```bash
-ng generate component component-name
-```
+Añadir artículos al carrito de compras
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Generación de factura en moneda local o extranjera
 
-```bash
-ng generate --help
-```
+Conversión automática con la tasa de cambio actualizada
 
-## Building
+Validaciones de formularios para evitar errores de entrada
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+📂 Almacenamiento de datos
+La aplicación no se conecta a ningún servidor externo ni base de datos.
+Toda la información es gestionada en el lado del cliente mediante LocalStorage, lo que permite pruebas rápidas sin necesidad de configuración adicional.
