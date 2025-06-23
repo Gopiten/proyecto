@@ -1,0 +1,56 @@
+<div class="container-fluid">
+  <div class="container">
+    <div class="row">
+      <div class="col"></div>
+      <div class="col pt-4">
+
+        <h1>
+          <a routerLink="/login" style="text-decoration:none; color:inherit;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+            </svg>
+          </a>
+          Registro al sistema
+        </h1>
+
+        <p>Completa el formulario para crear un usuario. Todos los campos son obligatorios.</p>
+
+        <form [formGroup]="registroForm" (ngSubmit)="registrar()">
+          <div class="input-group mb-3">
+            <input type="text" formControlName="nombre" class="form-control" placeholder="Ingrese el nombre del usuario" aria-label="Nombre">
+          </div>
+          <div *ngIf="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched" class="text-danger mb-2">
+            <small>El nombre es obligatorio.</small>
+          </div>
+
+          <div class="input-group mb-3">
+            <input type="email" formControlName="email" class="form-control" placeholder="Ingrese su correo electrónico" aria-label="Email">
+          </div>
+          <div *ngIf="registroForm.get('email')?.invalid && registroForm.get('email')?.touched" class="text-danger mb-2">
+            <small *ngIf="registroForm.get('email')?.errors?.['required']">El correo electrónico es obligatorio.</small>
+            <small *ngIf="registroForm.get('email')?.errors?.['email']">El correo electrónico no es válido.</small>
+          </div>
+
+          <div class="input-group mb-3">
+            <input type="password" formControlName="password" class="form-control" placeholder="Ingrese su clave" aria-label="Clave">
+          </div>
+          <div *ngIf="registroForm.get('password')?.invalid && registroForm.get('password')?.touched" class="text-danger mb-2">
+            <small *ngIf="registroForm.get('password')?.errors?.['required']">La contraseña es obligatoria.</small>
+            <small *ngIf="registroForm.get('password')?.errors?.['minlength']">La contraseña debe tener mínimo 6 caracteres.</small>
+          </div>
+
+          <div class="input-group mb-3">
+            <input type="password" formControlName="passwordr" class="form-control" placeholder="Repita su clave" aria-label="Repetir clave">
+          </div>
+          <div *ngIf="registroForm.get('passwordr')?.invalid && registroForm.get('passwordr')?.touched" class="text-danger mb-2">
+            <small *ngIf="registroForm.get('passwordr')?.errors?.['required']">Debe repetir la contraseña.</small>
+            <small *ngIf="registroForm.get('passwordr')?.errors?.['noCoinciden']">Las contraseñas no coinciden.</small>
+          </div>
+
+          <button type="submit" class="btn btn-primary">REGISTRAR</button>
+        </form>
+      </div>
+      <div class="col"></div>
+    </div>
+  </div>
+</div>
