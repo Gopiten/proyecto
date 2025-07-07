@@ -1,34 +1,35 @@
-<div class="container-fluid">
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col-md-6 login-box">
-        <h1>Ingreso al sistema</h1>
-        <p>Ingresa con tu usuario y clave</p>
+      <div class="col-md-5 col-lg-4 p-4 rounded-4 shadow bg-white">
+
+        <h2 class="text-center mb-3 text-primary">Ingreso al sistema</h2>
+        <p class="text-center text-muted mb-4">Ingresa con tu usuario y clave</p>
 
         <form [formGroup]="loginForm" (ngSubmit)="login()">
-
-          <div class="input-group mb-3">
-            <input type="text" formControlName="email" class="form-control" placeholder="Ingrese su usuario o correo electrónico">
-          </div>
-          <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger mb-2">
-            <small *ngIf="loginForm.get('email')?.errors?.['required']">El email es obligatorio.</small>
-            <small *ngIf="loginForm.get('email')?.errors?.['email']">El email no es válido.</small>
-          </div>
-
-          <div class="input-group mb-3">
-            <input type="password" formControlName="password" class="form-control" placeholder="Ingrese su clave">
-          </div>
-          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger mb-2">
-            <small *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es obligatoria.</small>
-            <small *ngIf="loginForm.get('password')?.errors?.['minlength']">La contraseña debe tener mínimo 8 caracteres.</small>
+          <div class="mb-3">
+            <label for="email" class="form-label">Usuario o Correo Electrónico</label>
+            <input type="text" id="email" formControlName="email" class="form-control" placeholder="Ingrese su usuario o correo">
+            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger mt-1">
+              <small *ngIf="loginForm.get('email')?.errors?.['required']">El email es obligatorio.</small>
+            </div>
           </div>
 
-          <button type="submit" class="btn btn-primary w-100">INGRESAR</button><br><br>
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input type="password" id="password" formControlName="password" class="form-control" placeholder="Ingrese su clave">
+            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger mt-1">
+              <small *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es obligatoria.</small>
+            </div>
+          </div>
 
-          <div class="text-center">
-            Registrate haciendo <a routerLink="/register">Click aquí</a>
+          <button type="submit" class="btn btn-primary w-100 mt-2">Ingresar</button>
+
+          <div class="text-center mt-3">
+            <small>¿No tienes cuenta? <a routerLink="/register" class="text-decoration-none">Regístrate aquí</a></small>
           </div>
         </form>
+
       </div>
     </div>
   </div>

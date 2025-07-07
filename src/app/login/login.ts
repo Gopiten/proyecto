@@ -12,11 +12,11 @@ import { Router, RouterModule} from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  loginForm!: FormGroup; // Formulario reactivo para login
+  loginForm!: FormGroup;
 
   constructor(
-    private fb: FormBuilder, // Constructor del formulario
-    private router: Router // Para redireccionar páginas
+    private fb: FormBuilder,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -27,7 +27,6 @@ export class LoginComponent implements OnInit {
     password: ['', [Validators.required, Validators.minLength(8)]]
   });
 
-  // Solo redirigir si NO estamos en /login (ya que estamos en login ahora mismo)
   const yaEstaEnLogin = this.router.url === '/login' || this.router.url === '';
 
   if (localStorage.getItem('logueado') === 'true' && !yaEstaEnLogin) {
@@ -36,26 +35,21 @@ export class LoginComponent implements OnInit {
 }
 
   login(): void {
-    // Si el formulario no es válido, marcamos todos los campos y mostramos alertas
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
-      alert("Complete correctamente los campos requeridos");
+      alert("Datos incorrectos, intente nuevamente");
       return;
     }
 
-    // Tomamos los datos ingresados
-    const { email, password } = this.loginForm.value;
+    const { name, email, password } = this.loginForm.value;
 
-    // Obtenemos el usuario guardado localmente (registro)
     const userData = localStorage.getItem('usuarioRegistrado');
     if (userData) {
       const usuario = JSON.parse(userData);
 
-      // Comparamos email/nombre y contraseña
-      if ((usuario.email === email || usuario.name === email) && usuario.password === password) {
+      if ((usuario.email === email || usuario.name === name) && usuario.password === password) {
         alert("Bienvenido al sistema");
 
-        // Guardamos datos de sesión y redirigimos
         localStorage.setItem('logueado', 'true');
         localStorage.setItem('dataSesion', JSON.stringify(usuario));
         this.router.navigate(['/product']);

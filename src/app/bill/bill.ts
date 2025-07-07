@@ -17,31 +17,23 @@ import autoTable from 'jspdf-autotable';
 
 export class BillComponent implements OnInit {
 
-  // Recibe productos seleccionados desde otro componente
   @Input() productosSeleccionados: (Product & { cantidad: number })[] = [];
 
-  // Emite un evento cuando se confirma la compra
   @Output() compraConfirmada = new EventEmitter<void>();
 
-  // Tipo de cambio inicializado con valor por defecto
   tipoCambioUSD: number = 350;
 
-  // Nombre del usuario para mostrar en la factura
   nombreUsuario: string = '';
 
-  constructor(private price: Price, private cartService: CartService, private router: Router) {}
+  constructor(private price: Price, private cartService: CartService, private router: Router) { }
 
-  // Al iniciar el componente
   ngOnInit(): void {
-    // Obtenemos los productos del carrito
     this.productosSeleccionados = this.cartService.obtenerProducts();
 
-    // Consultamos el tipo de cambio desde la API del BCRA
     this.price.obtenerTipoCambio().subscribe(valor => {
       this.tipoCambioUSD = valor;
     });
 
-    // Obtenemos el nombre del usuario desde localStorage
     const sesion = localStorage.getItem('dataSesion');
     if (sesion) {
       const usuario = JSON.parse(sesion);
@@ -49,73 +41,94 @@ export class BillComponent implements OnInit {
     }
   }
 
-  // Calcula el total en pesos argentinos
   obtenerTotalARS(): number {
     return this.productosSeleccionados.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
   }
 
-  // Calcula el total en dólares según el tipo de cambio actual
   obtenerTotalUSD(): number {
     return this.obtenerTotalARS() / this.tipoCambioUSD;
   }
 
-  // Confirma la compra y genera el PDF
   confirmarCompra(): void {
     this.generarPDF(() => {
-      this.cartService.limpiarCart(); // Vaciamos el carrito
+      this.cartService.limpiarCart();
       alert('¡Compra realizada con éxito!');
-      this.router.navigate(['/product']); // Volvemos a la vista de productos
+      this.router.navigate(['/product']);
     });
   }
 
-  // Genera un archivo PDF con los detalles de la compra
   generarPDF(callback: () => void): void {
-    const doc = new jsPDF(); // Crea el documento PDF
-    
-    // Título
-    doc.setFontSize(18);
-    doc.text('Factura de Compra', 14, 20);
-    doc.setFontSize(12);
-    doc.text(`Cliente: ${this.nombreUsuario}`, 14, 30);
+    const doc = new jsPDF();
 
-    // Preparamos las filas de la tabla
+    doc.setFontSize(20);
+    doc.setTextColor('#0d6efd');
+    doc.setFont('helvetica', 'bold');
+    doc.text('Factura de Compra', 14, 22);
+
+    doc.setFontSize(12);
+    doc.setTextColor('#212529');
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Cliente: ${this.nombreUsuario}`, 14, 32);
+
     const rows = this.productosSeleccionados.map(p => [
       p.nombre,
-      p.cantidad,
-      `$${p.precio}`,
-      `$${p.precio * p.cantidad}`,
+      p.cantidad.toString(),
+      `$${p.precio.toFixed(2)}`,
+      `$${(p.precio * p.cantidad).toFixed(2)}`,
       this.tipoCambioUSD > 0
-      ? `$${(p.precio * p.cantidad / this.tipoCambioUSD).toFixed(2)}`
-      : 'Cargando...'
+        ? `$${(p.precio * p.cantidad / this.tipoCambioUSD).toFixed(2)}`
+        : 'Cargando...'
     ]);
 
-    // Dibujamos la tabla en el PDF
     autoTable(doc, {
       head: [['Producto', 'Cantidad', 'Precio Unitario (ARS)', 'Total (ARS)', 'Total (USD)']],
       body: rows,
       startY: 40,
-      theme: 'grid'
+      theme: 'grid',
+      headStyles: {
+        fillColor: '#e9ecef',
+        textColor: '#212529',
+        fontStyle: 'bold',
+        fontSize: 12,
+        halign: 'center'
+      },
+      bodyStyles: {
+        fontSize: 11,
+        textColor: '#212529',
+        halign: 'center'
+      },
+      alternateRowStyles: {
+        fillColor: '#f8f9fa'
+      },
+      columnStyles: {
+        0: { halign: 'left' }
+      },
+      styles: {
+        cellPadding: 4,
+        lineColor: '#dee2e6',
+        lineWidth: 0.1
+      }
     });
 
-    // Calculamos la posición final para el total
     const finalY = (doc as any).lastAutoTable?.finalY || 40;
 
-    // Mostramos los totales
-    const totalARS = this.obtenerTotalARS().toFixed(2);
-    const totalUSD = this.obtenerTotalUSD().toFixed(2);
-    doc.text(`Total en ARS: $${totalARS}`, 14, finalY + 10);
-    doc.text(`Total en USD: $${totalUSD}`, 14, finalY + 20);
-    
-    // Nombre del archivo con fecha actual
-    const ahora = new Date();
-    const fechaStr = ahora.toISOString().slice(0,10);
-    const nombreArchivo = `factura_${fechaStr}.pdf`;
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor('#0d6efd');
+    doc.text(`Total en ARS: $${this.obtenerTotalARS().toFixed(2)}`, 14, finalY + 15);
+    doc.text(`Total en USD: $${this.obtenerTotalUSD().toFixed(2)}`, 14, finalY + 25);
 
-    // Guardamos el PDF
+    const ahora = new Date();
+    const fechaStr = ahora.toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' });
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor('#6c757d');
+    doc.text(`Emitido: ${fechaStr}`, doc.internal.pageSize.getWidth() - 60, finalY + 35);
+
+    const nombreArchivo = `factura_${ahora.toISOString().slice(0, 10)}.pdf`;
+
     doc.save(nombreArchivo);
 
-    // Llamamos al callback para continuar con el flujo
-    setTimeout(() => callback(), 500);
+    setTimeout(() => callback(), 1500);
   }
-
 }

@@ -16,8 +16,8 @@ import { FilterProductPipe } from '../pipe/filter-product-pipe';
 })
 
 export class ProductComponent implements OnInit {
-  products: Product[] = []; // Lista de productos a mostrar
-  filter: string = ''; // Texto para el filtro de búsqueda
+  products: Product[] = [];
+  filter: string = '';
 
   constructor(
     private productService: ProductService,
@@ -25,17 +25,14 @@ export class ProductComponent implements OnInit {
     public cartService: CartService
   ) {}
 
-  // Método que se ejecuta cuando se inicia el componente
   ngOnInit(): void {
-    this.cargarProducts(); // Cargamos los productos desde el servicio
+    this.cargarProducts();
   }
 
-  // Obtiene la lista de productos desde el servicio
   cargarProducts(): void {
     this.products = this.productService.obtenerProducts();
   }
 
-  // Elimina un producto tras confirmación del usuario
   eliminarProduct(id: number): void {
     if (confirm('¿Estás seguro de que querés eliminar este producto?')) {
       this.productService.eliminarProduct(id);
@@ -43,13 +40,11 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  // Redirige al formulario de edición, guardando el producto a editar en localStorage
   editarProduct(product: Product): void {
     localStorage.setItem('productEditar', JSON.stringify(product));
     this.router.navigate(['/product/new']);
   }
 
-  // Agrega el producto al carrito
   agregarAlCart(product: Product): void {
     this.cartService.agregarProduct(product);
     alert(`${product.nombre} fue agregado al carrito.`);

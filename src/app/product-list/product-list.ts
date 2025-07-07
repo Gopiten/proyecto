@@ -15,8 +15,8 @@ import { CartService } from '../service/cart';
 
 export class ProductListComponent implements OnInit {
 
-  productForm!: FormGroup; // Formulario reactivo para el producto
-  modoEdicion: boolean = false; // Modo edición (true si estamos editando un producto)
+  productForm!: FormGroup;
+  modoEdicion: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -25,9 +25,7 @@ export class ProductListComponent implements OnInit {
     private cartService: CartService
   ) {}
 
-  // Se ejecuta al iniciar el componente
   ngOnInit(): void {
-    // Creamos el formulario con validaciones
     this.productForm = this.fb.group({
       id: [0],
       nombre: ['', Validators.required],
@@ -37,20 +35,18 @@ export class ProductListComponent implements OnInit {
       imagen: ['']
     });
 
-    // Si hay un producto guardado para edición, lo cargamos en el formulario
     const productGuardado = localStorage.getItem('productEditar');
     if (productGuardado) {
       const product: Product = JSON.parse(productGuardado);
       this.modoEdicion = true;
-      this.productForm.patchValue(product); // Cargamos datos en el formulario
+      this.productForm.patchValue(product);
       localStorage.removeItem('productEditar');
     }
   }
 
-  // Guardar o actualizar un producto
   guardar(): void {
     if (this.productForm.invalid) {
-      this.productForm.markAllAsTouched(); // Marca todos los campos para mostrar errores
+      this.productForm.markAllAsTouched();
       alert('Por favor complete correctamente todos los campos obligatorios');
       return;
     }
@@ -58,36 +54,33 @@ export class ProductListComponent implements OnInit {
     const product: Product = this.productForm.value;
 
     if (this.modoEdicion) {
-      this.productService.actualizarProduct(product); // Actualiza producto
+      this.productService.actualizarProduct(product);
       alert('Producto actualizado correctamente');
     } else {
-      this.productService.agregarProduct(product); // Agrega nuevo producto
+      this.productService.agregarProduct(product);
       alert('Producto agregado correctamente');
     }
 
-    this.router.navigate(['/product']); // Vuelve a la lista de productos
+    this.router.navigate(['/product']);
   }
 
-  // Agrega el producto al carrito
   agregarAlCart(product: Product) {
     this.cartService.agregarProduct(product);
   }
 
-  // Botón cancelar que vuelve a la vista de productos
   cancelar(): void {
     this.router.navigate(['/product']);
   }
 
-  // Maneja la subida de imagen desde archivo local y lo convierte en base64
   onFileSelected(event: any): void {
-    const archivo = event.target.files[0]; // Obtenemos el archivo subido
+    const archivo = event.target.files[0];
     if (archivo) {
-      const lector = new FileReader(); // Creamos el lector de archivos
+      const lector = new FileReader();
       lector.onload = () => {
-        const imagenBase64 = lector.result as string; // Convertimos en base64
-        this.productForm.patchValue({ imagen: imagenBase64 }); // Cargamos en el formulario
+        const imagenBase64 = lector.result as string;
+        this.productForm.patchValue({ imagen: imagenBase64 });
       };
-      lector.readAsDataURL(archivo); // Leemos el archivo como data URL
+      lector.readAsDataURL(archivo);
     }
   }
 }

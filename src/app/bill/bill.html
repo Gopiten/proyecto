@@ -1,32 +1,54 @@
-<div class="container mt-4">
-  <h2>Factura</h2>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 p-4 rounded-4 shadow bg-white">
 
-  <table class="table table-bordered">
-    <thead class="table-dark">
-      <tr>
-        <th>Producto</th>
-        <th>Cantidad</th>
-        <th>Precio Unitario (ARS)</th>
-        <th>Total (ARS)</th>
-        <th>Total (USD)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let p of productosSeleccionados">
-        <td>{{ p.nombre }}</td>
-        <td>{{ p.cantidad }}</td>
-        <td>${{ p.precio }}</td>
-        <td>${{ p.precio * p.cantidad }}</td>
-        <td *ngIf="tipoCambioUSD > 0">${{ (p.precio * p.cantidad / tipoCambioUSD) | number: '1.2-2' }}</td>
-        <td *ngIf="tipoCambioUSD === 0">Cargando...</td>
-      </tr>
-    </tbody>
-  </table>
+      <h2 class="text-center text-primary mb-4">Factura</h2>
 
-  <div class="mt-3">
-    <strong> Monto Total ARS:</strong> ${{ obtenerTotalARS() }}<br>
-    <strong> Monto Total USD:</strong> ${{ obtenerTotalUSD() | number:'1.2-2' }}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-primary text-center">
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio Unitario (ARS)</th>
+              <th>Total (ARS)</th>
+              <th>Total (USD)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of productosSeleccionados">
+              <td>{{ p.nombre }}</td>
+              <td class="text-center">{{ p.cantidad }}</td>
+              <td class="text-center">$ {{ p.precio }}</td>
+              <td class="text-center">$ {{ p.precio * p.cantidad }}</td>
+              <td class="text-center">
+                <span *ngIf="tipoCambioUSD > 0">
+                  $ {{ (p.precio * p.cantidad / tipoCambioUSD) | number: '1.2-2' }}
+                </span>
+                <span *ngIf="tipoCambioUSD === 0">
+                  Cargando...
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-4 text-center fs-5">
+        <strong>Monto Total ARS:</strong> ${{ obtenerTotalARS() }} <br />
+        <strong>Monto Total USD:</strong> ${{ obtenerTotalUSD() | number:'1.2-2' }}
+      </div>
+
+      <div class="container my-4">
+        <div class="row justify-content-center">
+          <div class="col-md-6 p-4 rounded-4 shadow bg-white text-center">
+            <button class="btn btn-success btn-lg w-100" (click)="confirmarCompra()">
+            Confirmar Compra y Generar PDF
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
-
-  <button class="btn btn-success mt-3" (click)="confirmarCompra()">Confirmar Compra</button>
 </div>

@@ -13,29 +13,24 @@ import { CommonModule } from '@angular/common';
 
 export class CartComponent {
   
-  // Lista de productos que están en el carrito, con cantidad incluida
   products: (Product & { cantidad: number })[] = [];
   
   constructor(private cartService: CartService, private router: Router) {
-    // Al iniciar, cargamos los productos del carrito desde el servicio
     this.products = this.cartService.obtenerProducts();
   }
 
-  // Función para eliminar un producto del carrito
   eliminar(id: number) {
     this.cartService.eliminarProduct(id);
-    this.products = this.cartService.obtenerProducts(); // Actualizamos la lista local
+    this.products = this.cartService.obtenerProducts();
   }
 
-  // Función para actualizar la cantidad de un producto en el carrito
   actualizarCantidad(id: number, event: Event) {
-    const cantidad = +(event.target as HTMLInputElement).value; // Obtenemos el número del input
+    const cantidad = +(event.target as HTMLInputElement).value;
     if (cantidad > 0) {
-      this.cartService.actualizarCantidad(id, cantidad); // Actualizamos en el servicio
+      this.cartService.actualizarCantidad(id, cantidad);
     }
   }
 
-  // Redirige a la pantalla de factura para generar la compra
   generarBill() {
     this.router.navigate(['/bill']);
   }

@@ -1,55 +1,64 @@
-<div class="container mt-4">
-  <h2>{{ modoEdicion ? 'Editar Producto' : 'Agregar Producto' }}</h2>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 p-4 rounded-4 shadow bg-white">
 
-  <form [formGroup]="productForm" (ngSubmit)="guardar()">
+      <h2 class="text-center text-primary mb-4">
+        {{ modoEdicion ? 'Editar Producto' : 'Agregar Producto' }}
+      </h2>
 
-    <div class="mb-3">
-      <label>Nombre</label>
-      <input type="text" formControlName="nombre" class="form-control" />
-      <div *ngIf="productForm.get('nombre')?.invalid && productForm.get('nombre')?.touched" class="text-danger">
-        El nombre es obligatorio.
-      </div>
+      <form [formGroup]="productForm" (ngSubmit)="guardar()">
+
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Nombre</label>
+          <input type="text" id="nombre" formControlName="nombre" class="form-control" />
+          <div *ngIf="productForm.get('nombre')?.invalid && productForm.get('nombre')?.touched" class="text-danger mt-1">
+            El nombre es obligatorio.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="descripcion" class="form-label">Descripción</label>
+          <textarea id="descripcion" formControlName="descripcion" class="form-control"></textarea>
+          <div *ngIf="productForm.get('descripcion')?.invalid && productForm.get('descripcion')?.touched" class="text-danger mt-1">
+            La descripción es obligatoria.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="precio" class="form-label">Precio (ARS)</label>
+          <input type="number" id="precio" formControlName="precio" class="form-control" />
+          <div *ngIf="productForm.get('precio')?.invalid && productForm.get('precio')?.touched" class="text-danger mt-1">
+            El precio es obligatorio y debe ser mayor a 0.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="categoria" class="form-label">Categoría</label>
+          <input type="text" id="categoria" formControlName="categoria" class="form-control" />
+          <div *ngIf="productForm.get('categoria')?.invalid && productForm.get('categoria')?.touched" class="text-danger mt-1">
+            La categoría es obligatoria.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="imagen" class="form-label">Imagen (URL opcional)</label>
+          <input type="text" id="imagen" formControlName="imagen" class="form-control mb-2" placeholder="URL de imagen" />
+          <label for="fileUpload" class="form-label">O subir una imagen desde tu PC</label>
+          <input type="file" id="fileUpload" class="form-control" (change)="onFileSelected($event)" accept="image/*" />
+        </div>
+
+        <div class="d-flex justify-content-center mt-4">
+          <button class="btn btn-success me-2" type="submit" [disabled]="productForm.invalid">
+            {{ modoEdicion ? 'Actualizar' : 'Agregar' }}
+          </button>
+
+          <button class="btn btn-danger" type="button" (click)="cancelar()">
+            Cancelar
+          </button>
+        </div>
+
+      </form>
+
     </div>
-
-    <div class="mb-3">
-      <label>Descripción</label>
-      <textarea formControlName="descripcion" class="form-control"></textarea>
-      <div *ngIf="productForm.get('descripcion')?.invalid && productForm.get('descripcion')?.touched" class="text-danger">
-        La descripción es obligatoria.
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <label>Precio (ARS)</label>
-      <input type="number" formControlName="precio" class="form-control" />
-      <div *ngIf="productForm.get('precio')?.invalid && productForm.get('precio')?.touched" class="text-danger">
-        El precio es obligatorio y debe ser mayor a 0.
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <label>Categoría</label>
-      <input type="text" formControlName="categoria" class="form-control" />
-      <div *ngIf="productForm.get('categoria')?.invalid && productForm.get('categoria')?.touched" class="text-danger">
-        La categoría es obligatoria.
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <label>Imagen (URL opcional)</label>
-      <input type="text" formControlName="imagen" class="form-control mb-2" placeholder="URL de imagen" />
-      
-      <label>O subir una imagen desde tu PC</label>
-      <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*">
-    </div>
-
-    <button class="btn btn-success" type="submit" [disabled]="productForm.invalid">
-      {{ modoEdicion ? 'Actualizar' : 'Agregar' }}
-    </button>
-
-    <button class="btn btn-danger ms-2" type="button" (click)="cancelar()">
-      Cancelar
-    </button>
-
-  </form>
+  </div>
 </div>

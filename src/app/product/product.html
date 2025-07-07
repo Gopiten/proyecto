@@ -1,61 +1,67 @@
-<div class="container mt-4">
-  <h2>Listado de Productos</h2>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 p-4 rounded-4 shadow bg-white">
 
-  <!-- Campo de búsqueda -->
-  <div class="mb-3">
-    <input type="text" [(ngModel)]="filter" placeholder="Buscar por nombre o categoría" class="form-control">
+      <h2 class="text-center text-primary mb-4">Listado de Productos</h2>
+
+      <div class="mb-3">
+        <input type="text" [(ngModel)]="filter" placeholder="Buscar por nombre o categoría" class="form-control" />
+      </div>
+
+      <div class="d-flex justify-content-end mb-3">
+        <a class="btn btn-primary" routerLink="/product/new">Agregar Producto</a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-primary text-center">
+            <tr>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Precio (ARS)</th>
+              <th>Categoría</th>
+              <th>Imagen</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="products.length > 0; else noProductos">
+            <tr *ngFor="let producto of products | filterProduct:filter">
+              <td>{{ producto.nombre }}</td>
+              <td>{{ producto.descripcion }}</td>
+              <td>$ {{ producto.precio }}</td>
+              <td>{{ producto.categoria }}</td>
+              <td>
+                <img [src]="producto.imagen" alt="imagen" width="60" height="60" class="rounded border" *ngIf="producto.imagen" />
+              </td>
+              <td class="text-center">
+                <button mat-fab color="primary" class="me-2" (click)="editarProduct(producto)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-fab color="warn" class="me-2" (click)="eliminarProduct(producto.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+                <button mat-fab color="accent" (click)="agregarAlCart(producto)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noProductos>
+        <div class="alert alert-info text-center mt-3">
+          No hay productos cargados.
+        </div>
+      </ng-template>
+
+      <div class="mt-4 text-center" *ngIf="cartService.obtenerProducts().length > 0">
+        <a class="btn btn-success" routerLink="/cart">
+          Ver Carrito ({{ cartService.obtenerProducts().length }} productos)
+        </a>
+      </div>
+
+    </div>
   </div>
-
-  <!-- Botón para agregar producto -->
-  <a class="btn btn-primary mb-3" routerLink="/product/new">Agregar Producto</a>
-
-  <!-- Tabla de productos -->
-  <table class="table table-bordered table-striped mt-3">
-    <thead class="table-dark">
-      <tr>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th>Precio (ARS)</th>
-        <th>Categoría</th>
-        <th>Imagen</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr *ngFor="let producto of products | filterProduct:filter">
-        <td>{{ producto.nombre }}</td>
-        <td>{{ producto.descripcion }}</td>
-        <td>${{ producto.precio }}</td>
-        <td>{{ producto.categoria }}</td>
-        <td>
-          <img [src]="producto.imagen" alt="imagen" width="60" height="60" *ngIf="producto.imagen">
-        </td>
-        <td>
-          <button mat-fab class="boton-editar" (click)="editarProduct(producto)">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-fab class="boton-eliminar" (click)="eliminarProduct(producto.id)">
-            <mat-icon>delete</mat-icon>
-          </button>
-          <button mat-fab class="boton-agregar" (click)="agregarAlCart(producto)">
-            <mat-icon>add</mat-icon>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- Mensaje si no hay productos -->
-  <div *ngIf="products.length === 0" class="alert alert-info">
-    No hay productos cargados.
-  </div>
-
-  <!-- Botón Ver Carrito (solo si hay productos en el carrito) -->
-  <div class="mt-4" *ngIf="cartService.obtenerProducts().length > 0">
-    <a class="btn btn-success" routerLink="/cart">
-      Ver Carrito ({{ cartService.obtenerProducts().length }} productos)
-    </a>
-  </div>
-  
 </div>
